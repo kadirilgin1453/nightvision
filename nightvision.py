@@ -18,7 +18,8 @@ cam_fps_id = 1
 
 #draw black background and fps with pygame
 def updateFpsText():
-        fps_text = font.render(str(CAM_FPS_LIST[cam_fps_id]) + "fps", True, green, black)
+        fps_text = font.render(f"{str(CAM_FPS_LIST[cam_fps_id])}fps", True,
+                               green, black)
         fps_text_rect = fps_text.get_rect()
         fps_text_rect.center = (CAM_HORIZONTAL_OFFSET-(CAM_WIDTH/2),((SCREEN_HEIGHT+CAM_HEIGHT)/2)+7)
         screen.blit(fps_text, fps_text_rect)
@@ -71,30 +72,28 @@ while True:
         if funcButton.is_pressed:
                 if funcButtonDownStartTime == 0:
                         funcButtonDownStartTime = time.time()
-                else:
-                        if (time.time() - funcButtonDownStartTime) >= POWER_DOWN_BUTTON_DUR:
-                                os.system("sudo shutdown now -h")
-        else:
-                if funcButtonDownStartTime != 0:
-                        #disable connections
-                        splitter.connection.disable()
-                        render_l.connection.disable()
-                        render_r.connection.disable()
-                        #change fps
-                        cam_fps_id += 1
-                        if cam_fps_id >= len(CAM_FPS_LIST):
-                                cam_fps_id = 0
-                        print(CAM_FPS_LIST[cam_fps_id])
-                        updateFpsText()
-                        camera.outputs[0].framerate = CAM_FPS_LIST[cam_fps_id]
-                        camera.outputs[0].commit()
-                        #enable connections
-                        splitter.connection.enable()
-                        render_l.connection.enable()
-                        render_r.connection.enable()
-                        ###
-                        print("Func button pressed")
-                        funcButtonDownStartTime = 0
+                elif (time.time() - funcButtonDownStartTime) >= POWER_DOWN_BUTTON_DUR:
+                        os.system("sudo shutdown now -h")
+        elif funcButtonDownStartTime != 0:
+                #disable connections
+                splitter.connection.disable()
+                render_l.connection.disable()
+                render_r.connection.disable()
+                #change fps
+                cam_fps_id += 1
+                if cam_fps_id >= len(CAM_FPS_LIST):
+                        cam_fps_id = 0
+                print(CAM_FPS_LIST[cam_fps_id])
+                updateFpsText()
+                camera.outputs[0].framerate = CAM_FPS_LIST[cam_fps_id]
+                camera.outputs[0].commit()
+                #enable connections
+                splitter.connection.enable()
+                render_l.connection.enable()
+                render_r.connection.enable()
+                ###
+                print("Func button pressed")
+                funcButtonDownStartTime = 0
         time.sleep(0.1)
 
 
